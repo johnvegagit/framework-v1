@@ -6,7 +6,10 @@ class Home
 
     public function index()
     {
+        $data = ['title' => 'welcome to framework'];
+        $this->header($data);
         $this->view('home');
+        $this->footer();
     }
 
     public function about()
