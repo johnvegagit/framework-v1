@@ -6,7 +6,10 @@ class _404
 
     public function index()
     {
+        $data = ['title' => 'Error 404'];
+        $this->header($data);
         $this->view('404');
+        $this->footer();
     }
 
 }

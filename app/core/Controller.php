@@ -1,7 +1,7 @@
 <?php
 trait Controller
 {
-    public function header($data)
+    public function header($data = [])
     {
         $DS = DIRECTORY_SEPARATOR;
         $filename = $DS . 'opt' . $DS . 'lampp' . $DS . 'htdocs' . $DS . 'public_html' . $DS . 'framework-v1' . $DS . 'app' . $DS . 'views' . $DS . 'layout' . $DS . 'header.php';

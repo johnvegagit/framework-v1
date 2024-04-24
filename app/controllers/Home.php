@@ -12,8 +12,4 @@ class Home
         $this->footer();
     }
 
-    public function about()
-    {
-        showPre('Home about page...');
-    }
 }
