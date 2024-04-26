@@ -25,6 +25,8 @@ class User
     {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $email = $_POST['email'];
             $name = $_POST['name'];
             $age = $_POST['age'];
 
@@ -32,11 +34,22 @@ class User
             $newDirectory = dirname($currentDirectory);
 
             try {
-                require $newDirectory . '/core/validate_data.php';
+                require $newDirectory . '/core/Validate_data.php';
 
+                $data = [
+                    'name' => $name,
+                    'age' => $age,
+                ];
 
-                if (is_input_empty($name, $age)) {
-                    header('Location: http://localhost/public_html/framework-v1/user');
+                if (is_input_empty($data)) {
+
+                    header('Location: http://localhost/public_html/framework-v1/user?data');
+                    die();
+                }
+
+                if (is_email_registered($email)) {
+
+                    header('Location: http://localhost/public_html/framework-v1/user?empty');
                     die();
                 }
 
@@ -87,18 +100,17 @@ class User
             $newDirectory = dirname($currentDirectory);
 
             try {
-                require $newDirectory . '/core/validate_data.php';
-
-
-                if (is_input_empty($name, $age)) {
-                    header('Location: http://localhost/public_html/framework-v1/user');
-                    die();
-                }
+                require $newDirectory . '/core/Validate_data.php';
 
                 $data = [
                     'name' => $name,
                     'age' => $age,
                 ];
+
+                if (is_input_empty($data)) {
+                    header('Location: http://localhost/public_html/framework-v1/user');
+                    die();
+                }
 
                 $user = new user_model;
                 $user->updateData($data, $id);
@@ -122,4 +134,5 @@ class User
         die();
 
     }
+
 }

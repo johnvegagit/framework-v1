@@ -10,6 +10,7 @@ class User
 
     //users
     //products
+    //email
     protected $table = 'users';
     protected $id = 'id';
     protected $allowdedColumns = [

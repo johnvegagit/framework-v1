@@ -5,6 +5,11 @@
 <main class="container-fluid p-3 d-flex justify-content-between ">
     <form class="col-sm-4 p-3" action="http://localhost/public_html/framework-v1/user/insert" method="post">
         <div class="mb-3">
+            <label for="email" class="form-label">Email*</label>
+            <input type="text" class="form-control" name="email" placeholder="Escriba un email...">
+        </div>
+
+        <div class="mb-3">
             <label for="name" class="form-label">Nombre*</label>
             <input type="text" class="form-control" name="name" placeholder="Escriba un nombre...">
         </div>
