@@ -8,9 +8,16 @@ class User
 {
     use Model;
 
+    //users
+    //products
     protected $table = 'users';
     protected $id = 'id';
-    protected $name = 'name';
-    protected $age = 'age';
+    protected $allowdedColumns = [
+
+        "name",
+        "age",
+        "gender",
+
+    ];
 
 }

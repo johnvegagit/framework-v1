@@ -18,7 +18,7 @@ trait Model
     protected $order_type = 'desc';
     protected $limit = '10';
 
-    public function getAll()
+    public function selectAll()
     {
 
         $pdo = $this->get_connection();
@@ -26,49 +26,82 @@ trait Model
         $stmt = $pdo->prepare($query);
         $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_OBJ);
-        showPre($results);
+        return $results;
 
     }
 
-    public function getOne($id)
+    public function selectWhere($id)
     {
 
         $pdo = $this->get_connection();
-        $query = "select $this->id, $this->name, $this->age from $this->table where id = :id";
+        $query = "select * from $this->table where id = :id";
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_OBJ);
-        showPre($result);
+        return $result;
 
     }
 
-    public function insert($name, $age)
+    public function insertData($data)
     {
 
         $pdo = $this->get_connection();
-        $query = "insert into $this->table ($this->name, $this->age) values (:name, :age)";
-        $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':age', $age);
-        $stmt->execute();
 
+        /** remove unwanted data **/
+        if (!empty($this->allowdedColumns)) {
+            foreach ($data as $key => $value) {
+                if (!in_array($key, $this->allowdedColumns)) {
+                    unset($data[$key]);
+                }
+            }
+        }
+
+        $keys = array_keys($data);
+
+        $query = "insert into $this->table (" . implode(",", $keys) . ") values (:" . implode(",:", $keys) . ")";
+
+        $stmt = $pdo->prepare($query);
+
+        foreach ($keys as $key) {
+            $paramName = ':' . $key;
+            $stmt->bindParam($paramName, $data[$key]);
+        }
+
+        $stmt->execute();
     }
 
-    public function update($name, $age, $id)
+    public function updateData($data, $id)
     {
 
         $pdo = $this->get_connection();
-        $query = "update $this->table set $this->name = :name, $this->age = :age where id = :id";
-        $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':age', $age);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
 
+        /** remove unwanted data **/
+        if (!empty($this->allowdedColumns)) {
+            foreach ($data as $key => $value) {
+                if (!in_array($key, $this->allowdedColumns)) {
+                    unset($data[$key]);
+                }
+            }
+        }
+
+        $keys = array_keys($data);
+
+        $setClause = implode("=?, ", $keys) . "=?";
+        $query = "update $this->table set $setClause where id = ?";
+        $stmt = $pdo->prepare($query);
+
+        $i = 1;
+        foreach ($data as $value) {
+            $stmt->bindValue($i++, $value);
+        }
+
+        $stmt->bindValue($i, $id);
+
+        $stmt->execute();
     }
 
-    public function delete($id)
+    public function deleteData($id)
     {
 
         $pdo = $this->get_connection();
@@ -78,4 +111,5 @@ trait Model
         $stmt->execute();
 
     }
+
 }

@@ -13,7 +13,7 @@ trait Controller
         }
     }
 
-    public function view($name)
+    public function view($name, $data = [])
     {
         $DS = DIRECTORY_SEPARATOR;
         $filename = $DS . 'opt' . $DS . 'lampp' . $DS . 'htdocs' . $DS . 'public_html' . $DS . 'framework-v1' . $DS . 'app' . $DS . 'views' . $DS . $name . '.view.php';
