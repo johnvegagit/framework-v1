@@ -9,7 +9,7 @@ use PDOException;
 trait Database
 {
     private $dbhost = 'localhost';
-    private $dbname = 'dbtest';
+    private $dbname = 'framework_db';
     private $dbuser = 'root';
     private $dbpass = '';
 

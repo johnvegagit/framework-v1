@@ -63,6 +63,14 @@ trait Model
 
         $stmt = $pdo->prepare($query);
 
+        if (isset($data['password'])) {
+            $option = [
+                'cost' => 12
+            ];
+            $hashedPwd = password_hash($data['password'], PASSWORD_BCRYPT, $option);
+            $data['password'] = $hashedPwd;
+        }
+
         foreach ($keys as $key) {
             $paramName = ':' . $key;
             $stmt->bindParam($paramName, $data[$key]);
