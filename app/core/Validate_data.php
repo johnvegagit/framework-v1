@@ -1,5 +1,7 @@
 <?php
 declare(strict_types=1);
+defined('ROOTPATH') or exit('Access Denied!');
+
 /**
  * Data validation functions.
  */

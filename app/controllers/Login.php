@@ -1,7 +1,13 @@
 <?php
 declare(strict_types=1);
+defined('ROOTPATH') or exit('Access Denied!');
 
-use models\Login as user_login;
+$currentDirectory = __DIR__;
+$newDirectory = dirname($currentDirectory, 2);
+require $newDirectory . '/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
+$dotenv->safeLoad();
 
 class Login
 {
@@ -64,7 +70,7 @@ class Login
                 if ($errors) {
                     $_SESSION['error_msg'] = $errors;
 
-                    header('Location: http://localhost/public_html/framework-v1/login');
+                    header('Location: ' . $_ENV['BASEURL'] . 'login');
                     die();
                 }
 
@@ -78,10 +84,9 @@ class Login
                 $_SESSION["user_surname"] = htmlspecialchars($get_data->surname);
                 $_SESSION["user_email"] = htmlspecialchars($get_data->email);
 
-
                 $_SESSION["last_regeneration"] = time();
 
-                header('Location: http://localhost/public_html/framework-v1/');
+                header('Location: ' . $_ENV['BASEURL']);
                 die();
 
             } catch (PDOException $e) {
@@ -89,7 +94,7 @@ class Login
             }
 
         } else {
-            header("Location: http://localhost/public_html/framework-v1/");
+            header('Location: ' . $_ENV['BASEURL']);
             die();
         }
 

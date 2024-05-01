@@ -1,14 +1,26 @@
 <?php
+declare(strict_types=1);
+defined('ROOTPATH') or exit('Access Denied!');
+
+$DS = DIRECTORY_SEPARATOR;
+
+$currentDirectory = __DIR__;
+$newDirectory = dirname($currentDirectory, 2);
+require $newDirectory . $DS . 'vendor' . $DS . 'autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
+$dotenv->safeLoad();
+
 trait Controller
 {
     public function header($data = [])
     {
         $DS = DIRECTORY_SEPARATOR;
-        $filename = $DS . 'opt' . $DS . 'lampp' . $DS . 'htdocs' . $DS . 'public_html' . $DS . 'framework-v1' . $DS . 'app' . $DS . 'views' . $DS . 'layout' . $DS . 'header.php';
+        $filename = $_ENV['BASEPTH'] . 'app' . $DS . 'views' . $DS . 'layout' . $DS . 'header.php';
         if (file_exists($filename)) {
             require $filename;
         } else {
-            $filename = $DS . 'opt' . $DS . 'lampp' . $DS . 'htdocs' . $DS . 'public_html' . $DS . 'framework-v1' . $DS . 'app' . $DS . 'views' . $DS . '404.view.php';
+            $filename = $_ENV['BASEPTH'] . 'app' . $DS . 'views' . $DS . '404.view.php';
             require $filename;
         }
     }
@@ -16,11 +28,11 @@ trait Controller
     public function view($name, $data = [])
     {
         $DS = DIRECTORY_SEPARATOR;
-        $filename = $DS . 'opt' . $DS . 'lampp' . $DS . 'htdocs' . $DS . 'public_html' . $DS . 'framework-v1' . $DS . 'app' . $DS . 'views' . $DS . $name . '.view.php';
+        $filename = $_ENV['BASEPTH'] . 'app' . $DS . 'views' . $DS . $name . '.view.php';
         if (file_exists($filename)) {
             require $filename;
         } else {
-            $filename = $DS . 'opt' . $DS . 'lampp' . $DS . 'htdocs' . $DS . 'public_html' . $DS . 'framework-v1' . $DS . 'app' . $DS . 'views' . $DS . '404.view.php';
+            $filename = $_ENV['BASEPTH'] . 'app' . $DS . 'views' . $DS . '404.view.php';
             require $filename;
         }
     }
@@ -28,11 +40,11 @@ trait Controller
     public function footer()
     {
         $DS = DIRECTORY_SEPARATOR;
-        $filename = $DS . 'opt' . $DS . 'lampp' . $DS . 'htdocs' . $DS . 'public_html' . $DS . 'framework-v1' . $DS . 'app' . $DS . 'views' . $DS . 'layout' . $DS . 'footer.php';
+        $filename = $_ENV['BASEPTH'] . 'app' . $DS . 'views' . $DS . 'layout' . $DS . 'footer.php';
         if (file_exists($filename)) {
             require $filename;
         } else {
-            $filename = $DS . 'opt' . $DS . 'lampp' . $DS . 'htdocs' . $DS . 'public_html' . $DS . 'framework-v1' . $DS . 'app' . $DS . 'views' . $DS . '404.view.php';
+            $filename = $_ENV['BASEPTH'] . 'app' . $DS . 'views' . $DS . '404.view.php';
             require $filename;
         }
     }

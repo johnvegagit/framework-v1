@@ -1,5 +1,13 @@
 <?php
 declare(strict_types=1);
+defined('ROOTPATH') or exit('Access Denied!');
+
+$currentDirectory = __DIR__;
+$newDirectory = dirname($currentDirectory, 2);
+require $newDirectory . '/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
+$dotenv->safeLoad();
 
 class Resetpass
 {
@@ -15,6 +23,12 @@ class Resetpass
         $this->header($data);
         $this->view('signup_login_view/resetpass', $data);
         $this->footer();
+
+    }
+
+    public function ressetthe()
+    {
+        echo 'hello';
 
     }
 
@@ -59,7 +73,7 @@ class Resetpass
                 if ($errors) {
                     $_SESSION['error_msg'] = $errors;
 
-                    header("Location:  http://localhost/public_html/framework-v1/resetpass");
+                    header('Location: ' . $_ENV['BASEURL'] . 'resetpass');
                     die();
                 }
 
@@ -69,7 +83,7 @@ class Resetpass
                 $scss_msg['restpwd_scs'] = "!Su contraseña a sido restaurada con exito¡";
                 $_SESSION['scss_msg'] = $scss_msg;
 
-                header("Location:  http://localhost/public_html/framework-v1/login/?resetpass=success");
+                header('Location: ' . $_ENV['BASEURL'] . 'login/?resetpass=success');
                 die();
 
             } catch (PDOException $e) {

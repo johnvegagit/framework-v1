@@ -6,12 +6,22 @@ namespace core;
 use PDO;
 use PDOException;
 
+defined('ROOTPATH') or exit('Access Denied!');
+
 trait Database
 {
-    private $dbhost = 'localhost';
-    private $dbname = 'framework_db';
-    private $dbuser = 'root';
-    private $dbpass = '';
+    private $dbhost;
+    private $dbname;
+    private $dbuser;
+    private $dbpass;
+
+    public function __construct()
+    {
+        $this->dbhost = $_ENV['DBHOST'];
+        $this->dbname = $_ENV['DBNAME'];
+        $this->dbuser = $_ENV['DBUSER'];
+        $this->dbpass = $_ENV['DBPASS'];
+    }
 
     public function get_connection(): PDO
     {

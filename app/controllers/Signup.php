@@ -1,5 +1,7 @@
 <?php
 declare(strict_types=1);
+defined('ROOTPATH') or exit('Access Denied!');
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -106,17 +108,18 @@ class Signup
                     ];
 
                     $_SESSION['signup_data'] = $signupData;
-                    header('Location: http://localhost/public_html/framework-v1/signup?data=empty');
+                    header('Location: ' . $_ENV['BASEURL'] . 'signup');
                     die();
                 }
-
-                $user = new user_signup;
-                $user->insertData($data);
 
                 // Envío del correo electrónico de verificación.
                 $currentDirectory = __DIR__;
                 $newDirectory = dirname($currentDirectory, 2);
-                require $newDirectory . '/vendor/autoload.php'; // Incluye Composer autoload.
+                require $newDirectory . '/vendor/autoload.php';
+
+                $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
+                $dotenv->safeLoad();
+
                 $mail = new PHPMailer(true);
 
                 // Configuración del servidor SMTP y contenido del correo electrónico.
@@ -125,19 +128,19 @@ class Signup
                 $mail->isSMTP();                                           //Send using SMTP.
                 $mail->Host = 'smtp.gmail.com';                           //Set the SMTP server to send through.
                 $mail->SMTPAuth = true;                                  //Enable SMTP authentication.
-                $mail->Username = 'email...';             //SMTP username.
-                $mail->Password = 'password...';                  //SMTP password.
+                $mail->Username = $_ENV['DATAMAIL'];                    //SMTP username.
+                $mail->Password = $_ENV['DATAPASS'];                   //SMTP password.
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;      //Enable implicit TLS encryption.
                 $mail->Port = 465;                                   //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`.
 
                 // Recipients.
-                $mail->setFrom('email...');
+                $mail->setFrom($_ENV['DATAMAIL']);
                 $mail->addAddress($email);
 
                 // Content.
                 $mail->isHTML(true);                             //Set email format to HTML
                 $mail->Subject = 'no reply';
-                $mail->Body = 'Ingrese en este enlace, para iniciar sesíon. <b><a href="http://localhost/public_html/framework-v1/login/?verification=' . $auth_code . '">http://localhost/public_html/framework-v1/login/?verification=' . $auth_code . '</a></b>';
+                $mail->Body = 'Ingrese en este enlace, para iniciar sesíon. <b><a href="' . $_ENV['BASEURL'] . 'login/?verification=' . $auth_code . '">' . $_ENV['BASEURL'] . 'login/?verification=' . $auth_code . '</a></b>';
 
                 // Envía el correo electrónico.
                 $mail->send();
@@ -148,7 +151,11 @@ class Signup
                     $info_msg = [];
                     $info_msg['verify_email'] = "¡Hola $name! Te hemos enviado un enlace para verificar tu cuenta a tu correo: $email";
                     $_SESSION['info_msg'] = $info_msg;
-                    header("Location: http://localhost/public_html/framework-v1/signup");
+
+                    $user = new user_signup;
+                    $user->insertData($data);
+
+                    header('Location: ' . $_ENV['BASEURL'] . 'signup');
                     die();
                 }
 
@@ -161,7 +168,7 @@ class Signup
             }
 
         } else {
-            header("Location: http://localhost/public_html/framework-v1/");
+            header('Location: ' . $_ENV['BASEURL']);
             die();
         }
     }

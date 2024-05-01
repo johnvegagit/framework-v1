@@ -10,6 +10,8 @@ namespace core;
 use core\Database;
 use PDO;
 
+defined('ROOTPATH') or exit('Access Denied!');
+
 trait Model
 {
     use Database;

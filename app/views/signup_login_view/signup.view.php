@@ -92,23 +92,19 @@ function signup_inputs()
 if (!isset($_SESSION['user_id'])) { ?>
     <div class="info-msg-container"><?php show_inf_msg(); ?></div>
     <div id="FORM-SYSTEM">
-        <form action="http://localhost/public_html/framework-v1/signup/insert_user" method="post">
+        <form action="<?= URLPATH ?>signup/insert_user" method="post">
             <div class="form-header">
                 <h3>Crear una cuenta</h3>
-                <!-- <p>Porfavor complete los campos para crear una cuenta.</p> -->
             </div>
 
-            <div class="form-inputs-container">
-                <?php signup_inputs(); ?>
-            </div>
+            <div class="form-inputs-container"><?php signup_inputs(); ?></div>
 
             <button class="form-submit-btn" type="submit"> Crear una cuenta</button>
-
-            <h3 class="form-link-login">Ya tienes una cuanta: <a href="login"> iniciar sesion</a></h3>
+            <h3 class="form-link-login">Ya tienes una cuanta: <a href="<?= URLPATH ?>login"> iniciar sesion</a></h3>
         </form>
     </div>
     <div class="form-error-msg-container"><?php show_err_msg(); ?></div>
 <?php } else {
-    header("Location: http://localhost/public_html/framework-v1/");
+    header('Location:' . URLPATH);
     die();
 }

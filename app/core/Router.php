@@ -1,4 +1,14 @@
 <?php
+declare(strict_types=1);
+defined('ROOTPATH') or exit('Access Denied!');
+
+$currentDirectory = __DIR__;
+$newDirectory = dirname($currentDirectory, 2);
+require $newDirectory . '/vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
+$dotenv->safeLoad();
+
 trait Router
 {
     private $controller = 'user';
@@ -14,13 +24,13 @@ trait Router
     public function loadController()
     {
         $URL = $this->splitURL();
-        $filename = "/opt/lampp/htdocs/public_html/framework-v1/app/controllers/" . ucfirst($URL[0]) . ".php";
+        $filename = $_ENV['BASEPTH'] . 'app/controllers/' . ucfirst($URL[0]) . ".php";
         if (file_exists($filename)) {
             require $filename;
             $this->controller = ucfirst($URL[0]);
             unset($URL[0]);
         } else {
-            $filename = "/opt/lampp/htdocs/public_html/framework-v1/app/controllers/_404.php";
+            $filename = $_ENV['BASEPTH'] . 'app/controllers/_404.php';
             require $filename;
             $this->controller = '_404';
         }

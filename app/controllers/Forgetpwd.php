@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
+defined('ROOTPATH') or exit('Access Denied!');
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-use models\Forgetpwd as user_forgetpwd;
 
 class Forgetpwd
 {
@@ -51,16 +52,18 @@ class Forgetpwd
                 if ($errors) {
                     $_SESSION['error_msg'] = $errors;
 
-                    header('Location: http://localhost/public_html/framework-v1/forgetpwd');
+                    header('Location: ' . $_ENV['BASEURL'] . 'forgetpwd');
                     die();
                 }
-
-                update_user_code($email, $auth_code);
 
                 // Envío del correo electrónico de verificación.
                 $currentDirectory = __DIR__;
                 $newDirectory = dirname($currentDirectory, 2);
-                require $newDirectory . '/vendor/autoload.php'; // Incluye Composer autoload.
+                require $newDirectory . '/vendor/autoload.php';
+
+                $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
+                $dotenv->safeLoad();
+
                 $mail = new PHPMailer(true);
 
                 // Configuración del servidor SMTP y contenido del correo electrónico.
@@ -69,19 +72,19 @@ class Forgetpwd
                 $mail->isSMTP();                                           //Send using SMTP.
                 $mail->Host = 'smtp.gmail.com';                           //Set the SMTP server to send through.
                 $mail->SMTPAuth = true;                                  //Enable SMTP authentication.
-                $mail->Username = 'email...';             //SMTP username.
-                $mail->Password = 'password...';                  //SMTP password.
+                $mail->Username = $_ENV['DATAMAIL'];                    //SMTP username.
+                $mail->Password = $_ENV['DATAPASS'];                   //SMTP password.
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;      //Enable implicit TLS encryption.
                 $mail->Port = 465;                                   //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`.
 
                 // Recipients.
-                $mail->setFrom('email...');
+                $mail->setFrom($_ENV['DATAMAIL']);
                 $mail->addAddress($email);
 
                 // Content.
                 $mail->isHTML(true);                             //Set email format to HTML
                 $mail->Subject = 'no reply';
-                $mail->Body = 'Ingrese en este enlace, para iniciar sesíon. <b><a href="http://localhost/public_html/framework-v1/resetpass/?verification=' . $auth_code . '">http://localhost/public_html/framework-v1/resetpass/?verification=' . $auth_code . '</a></b>';
+                $mail->Body = 'Ingrese en este enlace, para iniciar sesíon. <b><a href="' . $_ENV['BASEURL'] . 'resetpass/?verification=' . $auth_code . '">' . $_ENV['BASEURL'] . 'resetpass/?verification=' . $auth_code . '</a></b>';
 
                 // Envía el correo electrónico.
                 $mail->send();
@@ -90,13 +93,15 @@ class Forgetpwd
                 if ($mail) {
 
                     $info_msg = [];
-                    $info_msg['verify_email'] = "¡Hola! Te hemos enviado un enlace a tu cuenta a tu correo : $email, para cambiar contraseña";
+                    $info_msg['verify_email'] = "¡Hola! Te hemos enviado un enlace a tu cuenta a tu correo: $email, para restaurar contraseña.";
                     $_SESSION['info_msg'] = $info_msg;
 
                     $auth_code_data = ['auth_code' => $auth_code];
                     $_SESSION['auth_code_data'] = $auth_code_data;
 
-                    header("Location: http://localhost/public_html/framework-v1/forgetpwd");
+                    update_user_code($email, $auth_code);
+
+                    header('Location: ' . $_ENV['BASEURL'] . 'forgetpwd');
                     die();
                 }
 
@@ -108,9 +113,8 @@ class Forgetpwd
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
 
-
         } else {
-            header("Location: http://localhost/public_html/framework-v1/");
+            header('Location: ' . $_ENV['BASEURL']);
             die();
         }
     }

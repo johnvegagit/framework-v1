@@ -1,8 +1,11 @@
 <?php
 declare(strict_types=1);
+
 namespace models;
 
 use core\Model;
+
+defined('ROOTPATH') or exit('Access Denied!');
 
 class Signup
 {

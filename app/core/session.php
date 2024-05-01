@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+defined('ROOTPATH') or exit('Access Denied!');
 
 /** session configuration start **/
 ini_set("session.use_only_cookies", 1);
