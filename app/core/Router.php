@@ -16,6 +16,7 @@ trait Router
 
     private function splitURL()
     {
+
         $URL = $_GET['url'] ?? 'home';
         $URL = explode("/", trim($URL, "/"));
         return $URL;

@@ -14,15 +14,13 @@ class Signup
 
     public function index()
     {
-
         $data = [
-            'title' => 'Sign Up | framework',
+            'title' => 'Sign Up | Framework',
         ];
 
-        $this->header($data);
+        $this->sigun_login_header($data);
         $this->view('signup_login_view/signup', $data);
-        $this->footer();
-
+        $this->sigun_login_footer();
     }
 
     public function insert_user()
@@ -62,39 +60,39 @@ class Signup
                 ];
 
                 if (is_input_empty($data)) {
-                    $errors['empty_input'] = '¡Campos vacios!';
+                    $errors['empty_input'] = 'Some field are empty!';
                 }
 
                 if (!are_inputs_contains_allowed_characters($nameSurname)) {
-                    $errors['allowed_characters'] = '¡Campo nombre o apellido contiene caracteres no permitidos. Solo se permiten letras, números y guiones bajos!';
+                    $errors['allowed_characters'] = '¡Field name and surname has special character!';
                 }
 
                 if (is_username_taken($username)) {
-                    $errors['username_taken'] = '¡El nombre de usuario ya fue adquirido.!';
+                    $errors['username_taken'] = '¡User name is already taken!';
                 }
 
                 if (!validate_email_domain($email)) {
-                    $errors['invalid_email_domain'] = '¡Dominion de correo no permitido! solo se acepta (gmail.com, hotmail.com, outlook.com)';
+                    $errors['invalid_email_domain'] = '¡This domain are allowded!';
                 }
 
                 if (is_email_invalid($email)) {
-                    $errors['invalid_email'] = '¡Correo invalido!';
+                    $errors['invalid_email'] = '¡The email are invalid!';
                 }
 
                 if (is_email_registered($email)) {
-                    $errors['email_used'] = '¡Este correo ya fue resgistrado!';
+                    $errors['email_used'] = '¡This email was already registered!';
                 }
 
                 if (!is_password_match($password, $password_cnfr)) {
-                    $errors['password_mismatch'] = '¡las contraseñas no coinciden!';
+                    $errors['password_mismatch'] = '¡Password don\'t match!';
                 }
 
                 if (!are_password_secure($password)) {
-                    $errors['pwd_validation'] = '¡Contraseña no segura. Debe de incluir una letra minúscula y mayúscula, un número y un carácter especial!';
+                    $errors['pwd_validation'] = '¡Your password are not secure: Password must be 8 to 16 characters long, including uppercase letters, special characters, and numbers!';
                 }
 
                 if (!are_password_have_minimun_characters($password)) {
-                    $errors['pwd_validation_lng'] = '¡La contraseña tiene que tener minimo 8 caracteres!';
+                    $errors['pwd_validation_lng'] = '¡Password should have minimun 8 character!';
                 }
 
                 if ($errors) {
@@ -140,7 +138,7 @@ class Signup
                 // Content.
                 $mail->isHTML(true);                             //Set email format to HTML
                 $mail->Subject = 'no reply';
-                $mail->Body = 'Ingrese en este enlace, para iniciar sesíon. <b><a href="' . $_ENV['BASEURL'] . 'login/?verification=' . $auth_code . '">' . $_ENV['BASEURL'] . 'login/?verification=' . $auth_code . '</a></b>';
+                $mail->Body = 'Verify your account using this link <b><a href="' . $_ENV['BASEURL'] . 'login/?verification=' . $auth_code . '">' . $_ENV['BASEURL'] . 'login/?verification=' . $auth_code . '</a></b>';
 
                 // Envía el correo electrónico.
                 $mail->send();
@@ -149,7 +147,7 @@ class Signup
                 if ($mail) {
 
                     $info_msg = [];
-                    $info_msg['verify_email'] = "¡Hola $name! Te hemos enviado un enlace para verificar tu cuenta a tu correo: $email";
+                    $info_msg['verify_email'] = "¡Hello $name! Please check your email for the verification link: $email";
                     $_SESSION['info_msg'] = $info_msg;
 
                     $user = new user_signup;

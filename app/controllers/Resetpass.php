@@ -17,18 +17,12 @@ class Resetpass
     public function index()
     {
         $data = [
-            'title' => 'Reset password | framework',
+            'title' => 'Reset password | Framework',
         ];
 
-        $this->header($data);
+        $this->sigun_login_header($data);
         $this->view('signup_login_view/resetpass', $data);
-        $this->footer();
-
-    }
-
-    public function ressetthe()
-    {
-        echo 'hello';
+        $this->sigun_login_footer();
 
     }
 
@@ -55,19 +49,19 @@ class Resetpass
                 ];
 
                 if (is_input_empty($data)) {
-                    $errors['empty_input'] = '¡Campos vacios! Ingrese una nueva contraseña.';
+                    $errors['empty_input'] = 'Empty fields! Enter a new password.';
                 }
 
                 if (is_user_code_empty($auth_code)) {
-                    $errors['empty_code'] = '¡A ocurrido un error con el codigo!';
-                }
-
-                if (!is_password_match($password, $password_cnfr)) {
-                    $errors['pwd_mismatch'] = '¡las contraseñas no coinciden!';
+                    $errors['empty_code'] = 'An error has occurred with the code!';
                 }
 
                 if (is_user_code_wrong($auth_code)) {
-                    $errors['empty_code'] = '¡A ocurrido un error con el codigo!';
+                    $errors['empty_code'] = 'An error has occurred with the code!';
+                }
+
+                if (!is_password_match($password, $password_cnfr)) {
+                    $errors['pwd_mismatch'] = 'Passwords don\'t match!';
                 }
 
                 if ($errors) {
@@ -80,7 +74,7 @@ class Resetpass
                 update_user_reset_code($password, $auth_code);
 
                 $scss_msg = [];
-                $scss_msg['restpwd_scs'] = "!Su contraseña a sido restaurada con exito¡";
+                $scss_msg['restpwd_scs'] = "Your password has been successfully restored.";
                 $_SESSION['scss_msg'] = $scss_msg;
 
                 header('Location: ' . $_ENV['BASEURL'] . 'login/?resetpass=success');
@@ -90,7 +84,5 @@ class Resetpass
                 die("Query failds: " . $e->getMessage());
             }
         }
-
     }
-
 }

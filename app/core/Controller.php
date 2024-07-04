@@ -48,4 +48,28 @@ trait Controller
             require $filename;
         }
     }
+
+    public function sigun_login_header($data = [])
+    {
+        $DS = DIRECTORY_SEPARATOR;
+        $filename = $_ENV['BASEPTH'] . 'app' . $DS . 'views' . $DS . 'signup_login_view' . $DS . 'header.php';
+        if (file_exists($filename)) {
+            require $filename;
+        } else {
+            $filename = $_ENV['BASEPTH'] . 'app' . $DS . 'views' . $DS . '404.view.php';
+            require $filename;
+        }
+    }
+
+    public function sigun_login_footer($data = [])
+    {
+        $DS = DIRECTORY_SEPARATOR;
+        $filename = $_ENV['BASEPTH'] . 'app' . $DS . 'views' . $DS . 'signup_login_view' . $DS . 'header.php';
+        if (file_exists($filename)) {
+            require $filename;
+        } else {
+            $filename = $_ENV['BASEPTH'] . 'app' . $DS . 'views' . $DS . '404.view.php';
+            require $filename;
+        }
+    }
 }

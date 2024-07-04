@@ -18,12 +18,12 @@ class Login
     {
 
         $data = [
-            'title' => 'Log In | framework',
+            'title' => 'Log In | Framework',
         ];
 
-        $this->header($data);
+        $this->sigun_login_header($data);
         $this->view('signup_login_view/login', $data);
-        $this->footer();
+        $this->sigun_login_footer();
 
     }
 
@@ -52,19 +52,19 @@ class Login
                 $get_data = get_user_data($email);
 
                 if (is_input_empty($data)) {
-                    $errors['empty_input'] = '¡Campos vacios!';
+                    $errors['empty_input'] = 'Some fields are empty!';
                 }
 
                 if (is_user_email_wrong($email)) {
-                    $errors['login_incorrect'] = '¡Datos incorrectos!';
+                    $errors['login_incorrect'] = 'Incorrect data!';
                 }
 
                 if (!is_user_email_wrong($email) && is_password_wrong($password, $email)) {
-                    $errors['login_incorrect'] = '¡Datos incorrectos!';
+                    $errors['login_incorrect'] = 'Incorrect data!';
                 }
 
                 if (is_user_verify($email)) {
-                    $errors['user_are_verify'] = '¡Aun no has verificado tu cuenta. revisa tu correo!';
+                    $errors['user_are_verify'] = 'You haven\'t verified your account yet. Check your email!';
                 }
 
                 if ($errors) {
@@ -97,6 +97,5 @@ class Login
             header('Location: ' . $_ENV['BASEURL']);
             die();
         }
-
     }
 }

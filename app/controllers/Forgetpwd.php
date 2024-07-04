@@ -13,12 +13,12 @@ class Forgetpwd
     public function index()
     {
         $data = [
-            'title' => 'Forget password | framework',
+            'title' => 'Forget password | Framework',
         ];
 
-        $this->header($data);
+        $this->sigun_login_header($data);
         $this->view('signup_login_view/forgetpwd', $data);
-        $this->footer();
+        $this->sigun_login_footer();
     }
 
     public function get_auth_code()
@@ -42,11 +42,11 @@ class Forgetpwd
                 ];
 
                 if (is_input_empty($data)) {
-                    $errors['empty_input'] = '¡Porfavor ingrese su correo!';
+                    $errors['empty_input'] = 'Please enter your email!';
                 }
 
                 if (is_email_wrong($email)) {
-                    $errors['email_used'] = '¡El correo ingresado no fue encontrado!';
+                    $errors['email_used'] = 'The mail entered was not found!';
                 }
 
                 if ($errors) {
@@ -84,7 +84,7 @@ class Forgetpwd
                 // Content.
                 $mail->isHTML(true);                             //Set email format to HTML
                 $mail->Subject = 'no reply';
-                $mail->Body = 'Ingrese en este enlace, para iniciar sesíon. <b><a href="' . $_ENV['BASEURL'] . 'resetpass/?verification=' . $auth_code . '">' . $_ENV['BASEURL'] . 'resetpass/?verification=' . $auth_code . '</a></b>';
+                $mail->Body = 'Click on this link to log in. <b><a href="' . $_ENV['BASEURL'] . 'resetpass/?verification=' . $auth_code . '">' . $_ENV['BASEURL'] . 'resetpass/?verification=' . $auth_code . '</a></b>';
 
                 // Envía el correo electrónico.
                 $mail->send();
@@ -93,7 +93,7 @@ class Forgetpwd
                 if ($mail) {
 
                     $info_msg = [];
-                    $info_msg['verify_email'] = "¡Hola! Te hemos enviado un enlace a tu cuenta a tu correo: $email, para restaurar contraseña.";
+                    $info_msg['verify_email'] = "Hello! We have sent you a link to your email: $email, to reset password.";
                     $_SESSION['info_msg'] = $info_msg;
 
                     $auth_code_data = ['auth_code' => $auth_code];
