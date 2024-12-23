@@ -10,7 +10,7 @@ class User
 {
     use Model;
 
-    protected $table = 'users';
+    protected $table = 'customers';
     protected $id = 'id';
     protected $allowdedColumns = [
 

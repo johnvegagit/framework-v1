@@ -6,8 +6,6 @@
 declare(strict_types=1);
 namespace core;
 
-ini_set('display_errors', 1);
-
 use core\Database;
 use PDO;
 
@@ -25,13 +23,12 @@ trait Model
 
     public function cache_dir()
     {
-        // Modify to root directory.
         $currentDirectory = __DIR__;
         $rootDirectory = dirname($currentDirectory, 2);
 
         $this->cache_dir = "$rootDirectory/app/cache/";
-        $this->cache_expiration = 60 * 60; // 1 hours.
-        // example: $this->cache_expiration = 60 * 1; // 1 minuts.
+        # $this->cache_expiration = 60 * 60; // 1 hours - every hours it wil be executed..
+        $this->cache_expiration = 60 * 1; // 1 minute - every minute it wil be executed.
     }
 
     public function clean_expired_cache()
@@ -42,7 +39,7 @@ trait Model
             foreach (glob("$this->cache_dir*.cache") as $cache_file) {
                 if ((time() - filemtime($cache_file)) >= $this->cache_expiration) {
                     unlink($cache_file);
-                    // echo "Archivo de caché eliminado: $cache_file<br>";
+                    echo "Archivo de caché eliminado: $cache_file<br>";
                 }
             }
         }
@@ -70,7 +67,7 @@ trait Model
         // Verify is file cache exist.
         if (file_exists($cache_file)) {
             $results = json_decode(file_get_contents($cache_file));
-            // echo "Datos obtenidos del caché:<br>";
+            echo "Datos obtenidos del caché:<br>";
 
         } else {
 
@@ -105,7 +102,7 @@ trait Model
                 die();
             }
 
-            // echo "Datos obtenidos de la base de datos:<br>";
+            echo "Datos obtenidos de la base de datos:<br>";
         }
 
         $stmt = $pdo->prepare($query);
