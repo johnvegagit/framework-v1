@@ -22,6 +22,13 @@ function output_header_menu()
   }
 }
 
+# DON'T Remove this: Your general error will display in the: (app/log/php_err_gn.log).
+ini_set("display_errors", 0);
+ini_set("log_errors", 'On');
+ini_set('error_log', '/opt/lampp/htdocs/public_html/framework-v1/app/log/php_err_gn.log');
+# DON'T Remove this: Your general error will display in the: (app/log/php_err_gn.log).
+
+echo $hey;
 ?>
 <!DOCTYPE html>
 <html lang="en">

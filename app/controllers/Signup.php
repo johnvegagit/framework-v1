@@ -39,6 +39,19 @@ class Signup
             $currentDirectory = __DIR__;
             $newDirectory = dirname($currentDirectory);
 
+            ini_set("log_errors", 'On');
+            ini_set('error_log', '/opt/lampp/htdocs/public_html/framework-v1/app/log/php_err_db.log');
+
+            // Para errores de base de datos
+            function logDbError($message)
+            {
+                file_put_contents(
+                    '/opt/lampp/htdocs/public_html/framework-v1/app/log/php_err_db.log',
+                    "Database Error: " . $message . " - " . date('Y-m-d H:i:s') . "\n",
+                    FILE_APPEND
+                );
+            }
+
             try {
                 require $newDirectory . '/core/Validate_data.php';
 
@@ -158,7 +171,10 @@ class Signup
                 }
 
             } catch (PDOException $e) {
-                die("Query failds: " . $e->getMessage());
+                logDbError($e->getMessage());
+                // die("Query failds: " . $e->getMessage());
+                die();
+
             } catch (Exception $e) {
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             } catch (Exception $e) {

@@ -1,0 +1,134 @@
+####################-#################### Guide for Database Error Logging Configuration ####################-####################
+
+This file is designed to log any database-related errors that occur within the system.
+If you're having trouble with logging database errors, please follow the steps below.
+
+What are Database Errors?
+
+Database errors indicate any issues that occur during database operations such as Create, Read, Update, or Delete (CRUD) actions.
+These errors may arise from SQL syntax issues, connection problems, permission denials, or exceptions in your try/catch blocks.
+These errors are sent to the error log file (php_err_db.log) located at: /file/path/example/framework-v1/app/log/php_err_db.log
+
+If database errors are not being logged correctly, please check the following:
+
+1) Managing Database Errors in PHP
+
+    Step 1: Hide errors on screen.
+    It’s recommended not to show errors on the user interface as it may reveal sensitive information about your database.
+    To do this, you need to hide the errors from being displayed.
+
+        <?php ini_set("display_errors", 0); ?>
+
+    Step 2: Enable error logging.
+    Ensure that PHP is configured to log errors to a file.
+
+        <?php ini_set("log_errors", 'On'); ?>
+
+    Step 3: Specify the error log file.
+    Define the path to the file where database errors will be logged. In this case, it will be a file named (php_err_db.log).
+
+        <?php ini_set('error_log', '/file/path/example/framework-v1/app/log/php_err_db.log'); ?>
+
+    The final code should look like this:
+
+        <?php
+            ini_set("display_errors", 0);  // Hide errors on screen
+            ini_set("log_errors", 'On');   // Enable error logging
+            ini_set('error_log', '/file/path/example/framework-v1/app/log/php_err_db.log');  // Specify the log file path
+        ?>
+
+2) Handling Exceptions in Database Operations
+
+When using database operations, it is important to capture and log exceptions using try/catch blocks.
+
+Example of Exception Handling:
+
+    <?php
+        try {
+            $pdo = new PDO('mysql:host=localhost;dbname=testdb', 'username', 'password');
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Example query
+            $stmt = $pdo->prepare("SELECT * FROM non_existent_table");
+            $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage(), 3, '/file/path/example/framework-v1/app/log/php_err_db.log');
+            echo "An error occurred. Please try again later.";  // Optional: Display generic error message
+        }
+    ?>
+
+3) Ensure Correct Permissions
+
+    If after configuring the settings in the code you still can’t log errors, it could be a permissions issue on the server.
+    Follow these steps to ensure Apache has access to the log file.
+
+    Step 1: Change the ownership of the log directory.
+
+        The log directory must be owned by the user under which Apache runs (commonly www-data).
+
+            sudo chown www-data:www-data /file/path/example/framework-v1/app/log
+
+    Step 2: Give write permissions to the log directory.
+
+        Make sure the log directory has the correct permissions to be written to by Apache.
+
+            sudo chmod 0777 /file/path/example/framework-v1/app/log
+
+    Step 3: Give write permissions to the log file.
+
+        The php_err_db.log file also needs the correct permissions so Apache can write to it.
+
+            sudo chmod 0777 /file/path/example/framework-v1/app/log/php_err_db.log
+
+        Verify the permissions are set correctly by running the following command:
+
+            ls -l /file/path/example/framework-v1/app/log
+
+        The output should look like this:
+
+            drwxrwxr-x 2 www-data www-data 4096 dic 22 11:21 log
+            -rwxrwxrwx 1 your-user-name your-user-name 0 dic 22 11:21 php_err_db.log
+        
+4) What if Errors are Still Not Logged?
+
+    If after following the above steps, errors are still not being logged, you may need to check the global PHP configuration in the php.ini file.
+
+    Step 1: Locate the php.ini file
+
+        The php.ini file is where PHP's global settings are configured.
+        It is usually located in one of the following directories:
+
+            /etc/php/7.x/apache2/php.ini (for Apache)
+            /etc/php/7.x/cli/php.ini (for the command line)
+
+    Step 2: Check the following settings in php.ini
+
+        Display Errors: Ensure this option is turned off to prevent errors from being displayed on the screen.
+
+            php.ini: display_errors = Off
+
+        Log Errors: This must be enabled to log errors.
+
+            php.ini: log_errors = On
+
+        Error Log: Specify the path to the log file.
+            
+            php.ini: error_log = /file/path/example/framework-v1/app/log/php_err_db.log
+
+        After making changes to php.ini, restart Apache for the changes to take effect.
+
+            For XAMPP (LAMPP) on Linux: sudo /opt/lampp/lampp restart
+
+
+Summary
+
+    --- Manage Errors: Set display_errors, log_errors, and error_log in your PHP code.
+
+    --- Handle Exceptions: Use try/catch blocks to catch database-related errors and log them.
+
+    --- Ensure Correct Permissions: Configure the correct permissions for the log directories and files.
+
+    --- Check php.ini: If the issue persists, ensure the php.ini file is configured properly.
+
+By following these steps, you should be able to properly manage and log database-related errors in your system.
+If the problem continues, it may be necessary to review your server configuration or check Apache’s logs for more information.

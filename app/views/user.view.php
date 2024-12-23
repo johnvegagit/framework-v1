@@ -1,4 +1,3 @@
-<?php ini_set('display_errors', 0); ?>
 <main>
     <h1>Users:</h1>
     <style>
@@ -61,12 +60,10 @@
                 <td><?= $data['oneresult']->name ?? 'john' ?></td>
                 <td><?= $data['oneresult']->email ?? 'johndoe12345@mail.com' ?></td>
                 <td>
-                    <a
-                        href="http://localhost/public_html/framework-v1/user/delete?d=<?= $data['oneresult']->id ?? '1' ?>">
+                    <a href="http://localhost/public_html/framework-v1/user/delete?d=<?= $data['oneresult']->id ?? '1' ?>">
                         <i class="bi bi-trash3"></i>
                     </a>
-                    <a
-                        href="http://localhost/public_html/framework-v1/user/update?user_id=<?= $data['oneresult']->id ?? '1' ?>">
+                    <a href="http://localhost/public_html/framework-v1/user/update?user_id=<?= $data['oneresult']->id ?? '1' ?>">
                         <i class="bi bi-pencil-square"></i>
                     </a>
                 </td>
@@ -75,3 +72,4 @@
         </tbody>
     </table>
 </main>
+
