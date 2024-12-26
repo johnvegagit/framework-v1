@@ -1,2 +1,4 @@
 User-agent: *
-Disallow: /admin/
+Disallow: /cache/
+
+Sitemap: https://yourWebsite.com/sitemap.xml
