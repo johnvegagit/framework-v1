@@ -9,17 +9,17 @@ ini_set('error_log', '/opt/lampp/htdocs/public_html/framework-v1/app/log/php_err
 
 defined('ROOTPATH') or exit('Access Denied!');
 
-class Forgetpwd
+class Resetpwd
 {
     use Controller;
 
     public function index()
     {
         $data = [
-            'title' => 'Forgetpwd page',
+            'title' => 'Resetpwd page',
         ];
         $this->auth_header($data);
-        $this->view('layout/auth/forgetpwd', $data);
+        $this->view('layout/auth/resetpwd', $data);
         $this->auth_footer();
     }
 }

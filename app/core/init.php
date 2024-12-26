@@ -16,10 +16,7 @@ spl_autoload_register(function ($classname) {
 
 
 require 'session.php';
-require 'function.php';
-require 'config.php';
 require 'Database.php';
-require 'Model.php';
 require 'Controller.php';
 require 'Router.php';
 require 'App.php';

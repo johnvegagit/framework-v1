@@ -1,31 +1,31 @@
 // Onclick show user password...
-const showPwds = document.querySelectorAll('.showPwdBtn');
+const showPwds = document.querySelectorAll('.show-pwd-btn');
 showPwds.forEach(showPwd => {
     showPwd.addEventListener('click', ()=>{
-        const input = showPwd.parentElement.querySelector('.form-input-pwd');
+        const input = showPwd.parentElement.querySelector('.auth-input-pwd');
         if (input.type === "password") {
             input.type = "text";
-            input.nextElementSibling.innerHTML = '<i class="bi bi-eye"></i>';
+            input.previousElementSibling.innerHTML = '<i title="hide password" class="bi bi-eye-slash"></i>';
         } else {
             input.type = "password";
-            input.nextElementSibling.innerHTML = '<i class="bi bi-eye-slash"></i>';
+            input.previousElementSibling.innerHTML = '<i title="show password" class="bi bi-eye"></i>';
         }
     });
 });
 
-// Remove error message.
-const msgs = document.querySelectorAll('.msg-dng');
-msgs.forEach((msg, index) => {
-    setTimeout(() => {
-        msg.style.display = 'none';
-    }, (index + 1) * 3000);
-});
-
-// Remove header message.
-const headerMsgs = document.querySelectorAll('.h-span-msg');
-headerMsgs.forEach((headerMsg, index) => {
-    console.log(headerMsg);
-    setTimeout(() => {
-        headerMsg.style.display = 'none';
-    }, (index + 1) * 10000);
-});
+// Remove modal msg.
+const closeModalMsg = document.getElementById('modalMessageContainer');
+if (closeModalMsg != null) {
+    closeModalMsg.addEventListener('click', (e)=> {
+        e.preventDefault();
+        if (e.target.matches('#closeModalMsgBtn')) {
+            document.getElementById('modalMessageContainer').style.display='none';
+            const scsMsg = document.getElementById('--modal-scss-msg');
+            if (scsMsg) {
+                document.getElementById('--modal-scss-msg').remove();
+            } else {
+                document.getElementById('--modal-error-msg').remove();
+            }
+        }
+    });
+}

@@ -1,101 +1,81 @@
 <?php
 declare(strict_types=1);
+
+# DON'T Remove this: Your general error will display in the: (app/log/gn_err.log).
+ini_set("display_errors", 0);
+ini_set("log_errors", 'On');
+ini_set('error_log', '/opt/lampp/htdocs/public_html/framework-v1/app/log/php_err_gn.log');
+# DON'T Remove this: Your general error will display in the: (app/log/gn_err.log).
+
 defined('ROOTPATH') or exit('Access Denied!');
 
-$currentDirectory = __DIR__;
-$newDirectory = dirname($currentDirectory, 2);
-require $newDirectory . '/vendor/autoload.php';
-
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
-$dotenv->safeLoad();
+use models\Login as customer_login;
 
 class Login
 {
-
     use Controller;
 
     public function index()
     {
-
         $data = [
-            'title' => 'Log In | Framework',
+            'title' => 'Login page',
         ];
-
-        $this->sigun_login_header($data);
-        $this->view('signup_login_view/login', $data);
-        $this->sigun_login_footer();
-
+        $this->auth_header($data);
+        $this->view('layout/auth/login', $data);
+        $this->auth_footer();
     }
 
-    public function login_user()
+    public function val_verification_code_func(string $customer_verification_code)
     {
+        function validate_customer_verification_code($value)
+        {
+            return !empty($value) && preg_match("/^[a-zA-Z0-9]+$/", $value);
+        }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-
-            $currentDirectory = __DIR__;
-            $newDirectory = dirname($currentDirectory);
-
-            try {
-                require $newDirectory . '/core/Validate_data.php';
-
-                // ERROR HANDLER...
-                $errors = [];
-
-                $data = [
-                    'email' => $email,
-                    'password' => $password,
-                ];
-
-                $get_data = get_user_data($email);
-
-                if (is_input_empty($data)) {
-                    $errors['empty_input'] = 'Some fields are empty!';
-                }
-
-                if (is_user_email_wrong($email)) {
-                    $errors['login_incorrect'] = 'Incorrect data!';
-                }
-
-                if (!is_user_email_wrong($email) && is_password_wrong($password, $email)) {
-                    $errors['login_incorrect'] = 'Incorrect data!';
-                }
-
-                if (is_user_verify($email)) {
-                    $errors['user_are_verify'] = 'You haven\'t verified your account yet. Check your email!';
-                }
-
-                if ($errors) {
-                    $_SESSION['error_msg'] = $errors;
-
-                    header('Location: ' . $_ENV['BASEURL'] . 'login');
-                    die();
-                }
-
-                $newSessionId = session_create_id();
-                $sessionId = $newSessionId . "_" . $get_data->id;
-                session_id($sessionId);
-
-                /** saved in session */
-                $_SESSION["user_id"] = $get_data->id;
-                $_SESSION["user_name"] = htmlspecialchars($get_data->name);
-                $_SESSION["user_surname"] = htmlspecialchars($get_data->surname);
-                $_SESSION["user_email"] = htmlspecialchars($get_data->email);
-
-                $_SESSION["last_regeneration"] = time();
-
-                header('Location: ' . $_ENV['BASEURL']);
-                die();
-
-            } catch (PDOException $e) {
-                die("Query failds: " . $e->getMessage());
+        function customer_verification_code_exist(string $verification_code)
+        {
+            $query_verification_code = new customer_login;
+            if ($query_verification_code->check_customer_verification_code_exist($verification_code)) {
+                return true;
             }
+            return false;
+        }
 
+        function delete_customer_verification_code(string $verification_code)
+        {
+            $query_verification_code = new customer_login;
+            $query_verification_code->delete_customer_verification_code($verification_code);
+        }
+
+        // Check if customer auth code exists.
+        if (!validate_customer_verification_code($customer_verification_code)) {
+            echo '<h5 class="shared-header-login-msg shared-header-login-msg-err">The verification code you provided is invalid or no longer exists. Please check the email we sent you and use the link provided to verify your account.</h5>';
+        } elseif (customer_verification_code_exist($customer_verification_code)) {
+            echo '<h5 class="shared-header-login-msg">Congratulations! Your account is now active and ready to use.</h5>';
+            delete_customer_verification_code($customer_verification_code);
         } else {
-            header('Location: ' . $_ENV['BASEURL']);
-            die();
+            echo '<h5 class="shared-header-login-msg">It seems your account has already been verified. Please log in to continue.</h5>';
         }
     }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+
+    if (isset($_GET['verification'])) {
+        $get_customer_verification_code = trim(filter_var($_GET['verification'], FILTER_SANITIZE_STRING));
+        $action = 'verification';
+
+        $verification_code = new Login;
+
+        switch ($action) {
+            case 'verification':
+                $verification_code->val_verification_code_func($get_customer_verification_code);
+                break;
+
+            default:
+                echo '';
+                break;
+        }
+    }
+
 }
