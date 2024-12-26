@@ -1,5 +1,29 @@
 RewriteEngine On
 
+# Block access to all files that start with a dot(.)
+<FilesMatch "^\..*">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^\.env$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^\.env.example$">
+    Require all denied
+</FilesMatch>
+
+<FilesMatch "^\.gitignore$">
+    Require all denied
+</FilesMatch>
+
+# Exclude sitemap.xml from friendly URL rules.
+RewriteCond %{REQUEST_URI} ^/sitemap\.xml$ [NC]
+RewriteRule ^ - [L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
+
+# Allow access to the robots.txt file.
+RewriteCond %{REQUEST_URI} !/robots\.txt$ [NC]
